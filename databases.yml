@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-users
+  namespace: microapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-users
+  template:
+    metadata:
+      labels:
+        app: db-users
+    spec:
+      containers:
+      - name: db-users
+        image: mariadb:10.6
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "root"
+        - name: MYSQL_DATABASE
+          value: "users_db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-users
+  namespace: microapp
+spec:
+  selector:
+    app: db-users
+  ports:
+  - port: 3306
+    targetPort: 3306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-products
+  namespace: microapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-products
+  template:
+    metadata:
+      labels:
+        app: db-products
+    spec:
+      containers:
+      - name: db-products
+        image: mariadb:10.6
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "root"
+        - name: MYSQL_DATABASE
+          value: "products_db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-products
+  namespace: microapp
+spec:
+  selector:
+    app: db-products
+  ports:
+  - port: 3306
+    targetPort: 3306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-orders
+  namespace: microapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-orders
+  template:
+    metadata:
+      labels:
+        app: db-orders
+    spec:
+      containers:
+      - name: db-orders
+        image: mariadb:10.6
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "root"
+        - name: MYSQL_DATABASE
+          value: "orders_db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-orders
+  namespace: microapp
+spec:
+  selector:
+    app: db-orders
+  ports:
+  - port: 3306
+    targetPort: 3306

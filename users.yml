@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+  namespace: microapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: users-service
+  template:
+    metadata:
+      labels:
+        app: users-service
+    spec:
+      containers:
+      - name: users-service
+        image: juan1722/users-service:latest
+        ports:
+        - containerPort: 5002
+        env:
+        - name: MYSQL_HOST
+          value: "db-users"
+        - name: MYSQL_USER
+          value: "root"
+        - name: MYSQL_PASSWORD
+          value: "root"
+        - name: MYSQL_DB
+          value: "users_db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-svc
+  namespace: microapp
+spec:
+  selector:
+    app: users-service
+  ports:
+  - port: 3001
+    targetPort: 5002
+  type: ClusterIP
